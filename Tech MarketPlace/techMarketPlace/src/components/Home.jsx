@@ -4,6 +4,7 @@ function Home() {
   const [products, setProducts] = useState([]);
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
+  const [darkMode, setDarkMode] = useState(false);
   const prodPerpage = 6;
 
   useEffect(() => {
@@ -15,11 +16,28 @@ function Home() {
 
   const indexLastpage = page * prodPerpage;
   const indexOfFirst = indexLastpage - prodPerpage;
-  const currProd = products.slice(indexOfFirst, indexLastpage);
-  const TotalePage = Math.ceil(products.length / prodPerpage);
+
+  const filtered = products.filter((product) =>
+    product.title.toLowerCase().includes(search.toLowerCase())
+  );
+
+  const currProd = filtered.slice(indexOfFirst, indexLastpage);
+  const TotalePage = Math.ceil(filtered.length / prodPerpage);
+
+  const theme = {
+    backgroundColor: darkMode ? "#121212" : "ffffff",
+    color: darkMode ? "ffffff" : "000000",
+    minHeight: "100vh",
+    padding: "1rem",
+  };
 
   return (
     <div>
+      <div>
+        <button onClick={() => setDarkMode((prev) => !prev)}>
+          Switch Theme
+        </button>
+      </div>
       <h2>Products</h2>
       <input
         type="text"
