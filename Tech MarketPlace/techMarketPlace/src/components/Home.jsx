@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 
 function Home() {
   const [products, setProducts] = useState([]);
-  const [page, setpage] = useState(1);
+  const [page, setPage] = useState(1);
+  const [search, setSearch] = useState("");
   const prodPerpage = 6;
 
   useEffect(() => {
@@ -11,6 +12,7 @@ function Home() {
       .then((data) => setProducts(data.products))
       .catch((err) => console.error(err));
   }, []);
+
   const indexLastpage = page * prodPerpage;
   const indexOfFirst = indexLastpage - prodPerpage;
   const currProd = products.slice(indexOfFirst, indexLastpage);
@@ -19,20 +21,36 @@ function Home() {
   return (
     <div>
       <h2>Products</h2>
-      <div>
-        {currProd.map((product) => {
-          <div key={prodPerpage.id}>
-            <img src="{product.thumbnail}" alt="{product.title}" />
+      <input
+        type="text"
+        placeholder="Search Products"
+        value={search}
+        onChange={(e) => {
+          setSearch(e.target.value);
+          setPage(1);
+        }}
+      />
+      <button>Search Products</button>
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(3,1fr)",
+          gap: "5px",
+        }}
+      >
+        {currProd.map((product) => (
+          <div key={product.id} style={{ border: "2px solid black" }}>
+            <img src={product.thumbnail} alt={product.title} />
             <h4>{product.title}</h4>
             <p>{product.price}</p>
             <p>Rating: {product.rating}</p>
-          </div>;
-        })}
+          </div>
+        ))}
       </div>
 
       <div>
-        <button onClick={() => setpage((p) => p - 1)}>prev</button>
-        <button onClick={() => setpage((p) => p + 1)}>Next</button>
+        <button onClick={() => setPage((p) => p - 1)}>prev</button>
+        <button onClick={() => setPage((p) => p + 1)}>Next</button>
       </div>
     </div>
   );
